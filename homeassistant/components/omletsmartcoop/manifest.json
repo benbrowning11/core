@@ -1,6 +1,6 @@
 {
   "domain": "omletsmartcoop",
-  "name": "smartcoop",
+  "name": "Omlet Smartcoop",
   "codeowners": ["@bbrowning11"],
   "config_flow": true,
   "documentation": "https://www.home-assistant.io/integrations/omletsmartcoop",
