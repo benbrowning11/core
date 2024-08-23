@@ -400,6 +400,7 @@ FLOWS = {
         "obihai",
         "octoprint",
         "ollama",
+        "omletsmartcoop",
         "omnilogic",
         "oncue",
         "ondilo_ico",

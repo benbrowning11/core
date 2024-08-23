@@ -1,0 +1,13 @@
+{
+  "domain": "omletsmartcoop",
+  "name": "smartcoop",
+  "codeowners": ["@bbrowning11"],
+  "config_flow": true,
+  "documentation": "https://www.home-assistant.io/integrations/omletsmartcoop",
+  "homekit": {},
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "requirements": ["smartcoop-python-sdk==0.1.2"],
+  "ssdp": [],
+  "zeroconf": []
+}
