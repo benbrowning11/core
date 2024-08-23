@@ -38,6 +38,7 @@ class OmletLightEntityDescription(OmletEntityDescription, LightEntityDescription
 LIGHT_DESCRIPTIONS = [
     OmletLightEntityDescription(
         key="OmletAutodoorLight",
+        name="Light",
         icon="mdi:lightbulb",
         get_turn_on_action=lambda device: [
             action for action in device.actions if action.name == "on"

@@ -27,6 +27,7 @@ class OmletBinarySensorEntityDescription(
 BINARY_SENSOR_DESCRIPTIONS = [
     OmletBinarySensorEntityDescription(
         key="door_open",
+        name="Door Sensor",
         device_class=BinarySensorDeviceClass.DOOR,
         icon="mdi:door",
         value_fn=lambda device: device.state.door.state,
@@ -34,6 +35,7 @@ BINARY_SENSOR_DESCRIPTIONS = [
     ),
     OmletBinarySensorEntityDescription(
         key="mains_powered",
+        name="Mains Powered",
         device_class=BinarySensorDeviceClass.PLUG,
         icon="mdi:power-plug",
         value_fn=lambda device: device.state.general.powerSource == "external",

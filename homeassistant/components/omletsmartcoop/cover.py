@@ -35,6 +35,7 @@ class OmletCoverEntityDescription(OmletEntityDescription, CoverEntityDescription
 COVER_DESCRIPTIONS = [
     OmletCoverEntityDescription(
         key="SmartAutodoor",
+        name="Door",
         device_class=CoverDeviceClass.DOOR,
         icon="mdi:door",
         supported_features=CoverEntityFeature.CLOSE | CoverEntityFeature.OPEN,

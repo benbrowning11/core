@@ -32,6 +32,7 @@ class OmletSensorEntityDescription(OmletEntityDescription, SensorEntityDescripti
 SENSOR_DESCRIPTIONS = [
     OmletSensorEntityDescription(
         key="battery",
+        name="Battery Level",
         device_class=SensorDeviceClass.BATTERY,
         icon="mdi:battery",
         value_fn=lambda device: device.state.general.batteryLevel,

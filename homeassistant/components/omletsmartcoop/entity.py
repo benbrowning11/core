@@ -27,6 +27,7 @@ class OmletEntityDescription(EntityDescription):
 
     exists_fn: Callable[[Device], bool] = lambda _: False
     value_fn: Callable[[Device], Any] = lambda _: None
+    name: str | None
 
 
 class OmletEntity(CoordinatorEntity):
@@ -40,7 +41,7 @@ class OmletEntity(CoordinatorEntity):
         self,
         coordinator: OmletApiCoordinator,
         device_id: str,
-        entity_description: EntityDescription,
+        entity_description: OmletEntityDescription,
     ) -> None:
         """Initialize the entity with the API key."""
         super().__init__(coordinator, context=device_id)
@@ -48,6 +49,7 @@ class OmletEntity(CoordinatorEntity):
         self.entity_description = entity_description
         self._device = coordinator.get_device(device_id)
         self._attr_unique_id = f"{device_id}_{entity_description.key}"
+        self._attr_name = entity_description.name
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -71,7 +73,7 @@ class OmletEntity(CoordinatorEntity):
         """Return device information about this entity."""
         return DeviceInfo(
             identifiers={(DOMAIN, self._device_id)},
-            name=self.name,
+            name=self.omlet_device.name,
             manufacturer="Omlet",  # codespell:ignore omlet
             model=self.omlet_device.deviceType,
             sw_version=self.omlet_device.state.general.firmwareVersionCurrent,
