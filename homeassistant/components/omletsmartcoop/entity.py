@@ -25,9 +25,10 @@ _LOGGER = logging.getLogger(__name__)
 class OmletEntityDescription(EntityDescription):
     """OmletSmartcoop entity description."""
 
+    name: str | None
     exists_fn: Callable[[Device], bool] = lambda _: False
     value_fn: Callable[[Device], Any] = lambda _: None
-    name: str | None
+    available: Callable[[Device], bool] = lambda _: True
 
 
 class OmletEntity(CoordinatorEntity):
@@ -76,5 +77,7 @@ class OmletEntity(CoordinatorEntity):
             name=self.omlet_device.name,
             manufacturer="Omlet",  # codespell:ignore omlet
             model=self.omlet_device.deviceType,
-            sw_version=self.omlet_device.state.general.firmwareVersionCurrent,
+            sw_version=self.omlet_device.state.getStatusValue(
+                ("general", "firmwareVersionCurrent")
+            ),
         )

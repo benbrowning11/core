@@ -35,8 +35,12 @@ SENSOR_DESCRIPTIONS = [
         name="Battery Level",
         device_class=SensorDeviceClass.BATTERY,
         icon="mdi:battery",
-        value_fn=lambda device: device.state.general.batteryLevel,
-        exists_fn=lambda device: device.state.general.batteryLevel is not None,
+        value_fn=lambda device: device.state.getStatusValue(
+            ("general", "batteryLevel")
+        ),
+        exists_fn=lambda device: device.state.isSet("general.batteryLevel") is not None
+        and device.state.isSet(("general", "powerSource"))
+        and device.state.getStatusValue(("general", "powerSource")) != "external",
         unit_of_measurement=PERCENTAGE,
         native_unit_of_measurement=PERCENTAGE,
         state_class="measurement",

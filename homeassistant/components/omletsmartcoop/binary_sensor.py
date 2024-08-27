@@ -30,16 +30,17 @@ BINARY_SENSOR_DESCRIPTIONS = [
         name="Door Sensor",
         device_class=BinarySensorDeviceClass.DOOR,
         icon="mdi:door",
-        value_fn=lambda device: device.state.door.state,
-        exists_fn=lambda device: device.state.door is not None,
+        value_fn=lambda device: device.state.getStatusValue(("door", "state")),
+        exists_fn=lambda device: device.state.isSet("door"),
     ),
     OmletBinarySensorEntityDescription(
         key="mains_powered",
         name="Mains Powered",
         device_class=BinarySensorDeviceClass.PLUG,
         icon="mdi:power-plug",
-        value_fn=lambda device: device.state.general.powerSource == "external",
-        exists_fn=lambda device: device.state.general.powerSource is not None,
+        value_fn=lambda device: device.state.getStatusValue(("general", "powerSource"))
+        == "external",
+        exists_fn=lambda device: device.state.isSet(("general", "powerSource")),
     ),
 ]
 

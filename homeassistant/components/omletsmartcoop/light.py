@@ -40,14 +40,10 @@ LIGHT_DESCRIPTIONS = [
         key="OmletAutodoorLight",
         name="Light",
         icon="mdi:lightbulb",
-        get_turn_on_action=lambda device: [
-            action for action in device.actions if action.name == "on"
-        ][0],
-        get_turn_off_action=lambda device: [
-            action for action in device.actions if action.name == "off"
-        ][0],
-        value_fn=lambda device: device.state.light.state == "on",
-        exists_fn=lambda device: device.state.light is not None,
+        get_turn_on_action=lambda device: device.tryGetAction("on"),
+        get_turn_off_action=lambda device: device.tryGetAction("off"),
+        value_fn=lambda device: device.state.getStatusValue(("light", "state")) == "on",
+        exists_fn=lambda device: device.state.isSet("light"),
         supported_color_modes={ColorMode.ONOFF},
     )
 ]

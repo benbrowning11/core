@@ -24,9 +24,33 @@ class OmletSwitchEntityDescription(OmletEntityDescription, SwitchEntityDescripti
 
     get_turn_on_action: Callable[[Device], None | Action] = lambda _: None
     get_turn_off_action: Callable[[Device], None | Action] = lambda _: None
+    available: Callable[[Device], bool] = lambda _: True
 
 
-SWITCH_DESCRIPTIONS: list[OmletSwitchEntityDescription] = []
+SWITCH_DESCRIPTIONS: list[OmletSwitchEntityDescription] = [
+    OmletSwitchEntityDescription(
+        key="OmletFanSwitch",
+        name="Fan Switch",
+        icon="mdi:light-switch",
+        get_turn_on_action=lambda device: device.tryGetAction("on"),
+        get_turn_off_action=lambda device: device.tryGetAction("off"),
+        value_fn=lambda device: device.state.getStatusValue(("fan", "state")) == "on"
+        or device.state.getStatusValue(("fan", "state")) == "boost",
+        exists_fn=lambda device: device.state.isSet("fan"),
+    ),
+    OmletSwitchEntityDescription(
+        key="OmletBoostSwitch",
+        name="Fan Boost Switch",
+        icon="mdi:turbine",
+        get_turn_on_action=lambda device: device.tryGetAction("boost"),
+        get_turn_off_action=lambda device: device.tryGetAction("on"),
+        value_fn=lambda device: device.state.getStatusValue(("fan", "state"))
+        == "boost",
+        exists_fn=lambda device: device.state.isSet("fan"),
+        available=lambda device: device.state.getStatusValue(("fan", "state")) == "on"
+        or device.state.getStatusValue(("fan", "state")) == "boost",
+    ),
+]
 
 
 async def async_setup_entry(

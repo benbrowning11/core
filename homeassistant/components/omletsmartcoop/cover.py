@@ -39,14 +39,10 @@ COVER_DESCRIPTIONS = [
         device_class=CoverDeviceClass.DOOR,
         icon="mdi:door",
         supported_features=CoverEntityFeature.CLOSE | CoverEntityFeature.OPEN,
-        get_open_action=lambda device: [
-            action for action in device.actions if action.name == "open"
-        ][0],
-        get_close_action=lambda device: [
-            action for action in device.actions if action.name == "close"
-        ][0],
-        value_fn=lambda device: device.state.door.state,
-        exists_fn=lambda device: device.state.door is not None,
+        get_open_action=lambda device: device.tryGetAction("open"),
+        get_close_action=lambda device: device.tryGetAction("close"),
+        value_fn=lambda device: device.state.getStatusValue(("door", "state")),
+        exists_fn=lambda device: device.state.isSet("door"),
     )
 ]
 
