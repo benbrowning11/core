@@ -35,7 +35,7 @@ class OmletEntity(CoordinatorEntity):
     """Base entity for the smartcoop integration."""
 
     _attr_has_entity_name = True
-
+    entity_description: OmletEntityDescription
     coordinator: OmletApiCoordinator
 
     def __init__(
@@ -81,3 +81,8 @@ class OmletEntity(CoordinatorEntity):
                 ("general", "firmwareVersionCurrent")
             ),
         )
+
+    @property
+    def available(self) -> bool:
+        """Return True if entity is available."""
+        return self.entity_description.available(self.omlet_device)
