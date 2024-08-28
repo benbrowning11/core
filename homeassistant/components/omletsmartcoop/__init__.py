@@ -49,7 +49,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up the smartcoop integration from a config entry."""
     _LOGGER.info("Setting up smartcoop integration")
-    _LOGGER.info("Config: %s", entry.as_dict())
     client_secret = entry.data[CONF_API_TOKEN]
     client = SmartCoopClient(client_secret=client_secret)
     omlet = Omlet(client)  # codespell:ignore omlet
