@@ -17,6 +17,7 @@ from homeassistant.components.fan import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util.percentage import percentage_to_ordered_list_item
 
 from .const import DOMAIN
 from .entity import OmletEntity, OmletEntityDescription
@@ -45,7 +46,8 @@ FAN_DESCRIPTIONS: list[OmletFanDescription] = [
         exists_fn=lambda device: device.state.isSet("fan"),
         supported_features=FanEntityFeature.TURN_OFF
         | FanEntityFeature.TURN_ON
-        | FanEntityFeature.PRESET_MODE,
+        | FanEntityFeature.PRESET_MODE
+        | FanEntityFeature.SET_SPEED,
     )
 ]
 
@@ -65,7 +67,7 @@ async def async_setup_entry(
     )
 
 
-ORDERED_FAN_SPEEDS: list[str] = ["on", "boost"]
+ORDERED_NAMED_FAN_SPEEDS: list[str] = ["on", "boost"]
 
 
 class OmletFan(OmletEntity, FanEntity):
@@ -89,12 +91,18 @@ class OmletFan(OmletEntity, FanEntity):
     def preset_mode(self) -> str | None:
         """Return the current preset mode."""
         state = self.entity_description.value_fn(self.omlet_device)
-        return None if state == "off" else state
+        match state:
+            case "on" | "onpending":
+                return "on"
+            case "boost" | "boostpending":
+                return "boost"
+            case _:
+                return None
 
     @property
     def preset_modes(self) -> list[str]:
         """Return the list of available preset modes."""
-        return ORDERED_FAN_SPEEDS
+        return ORDERED_NAMED_FAN_SPEEDS
 
     async def async_turn_on(
         self,
@@ -129,7 +137,20 @@ class OmletFan(OmletEntity, FanEntity):
         await self.coordinator.perform_action(func(self.omlet_device))
         await self.coordinator.async_request_refresh()
 
+    async def async_set_percentage(self, percentage: int) -> None:
+        """Set the speed percentage of the fan."""
+        mode = percentage_to_ordered_list_item(ORDERED_NAMED_FAN_SPEEDS, percentage)
+        if mode is None:
+            await self.async_turn_off()
+        else:
+            await self.async_set_preset_mode(mode)
+
     @property
     def speed_count(self) -> int:
         """Return the number of speeds the fan supports."""
-        return len(ORDERED_FAN_SPEEDS)
+        return len(ORDERED_NAMED_FAN_SPEEDS)
+
+    @property
+    def percentage(self) -> int:
+        """Return the current speed percentage."""
+        return 50 if self.preset_mode == "on" else 100
